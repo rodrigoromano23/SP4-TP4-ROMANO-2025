@@ -1,6 +1,5 @@
 
 
-//-------------------------------funcional correcto-------------------------------------
 import React, { useState } from "react";
 import Home from "./pages/Home";
 import Digimon from "./pages/Digimon";
@@ -12,6 +11,7 @@ import "react-toastify/dist/ReactToastify.css";
 
 const App = () => {
   const [selectedUniverse, setSelectedUniverse] = useState(null);
+  const [menuOpen, setMenuOpen] = useState(false);
 
   const navItems = [
     { id: "Digimon", label: "Digimon", image: "/img/digimon.jpg" },
@@ -21,37 +21,44 @@ const App = () => {
   ];
 
   return (
-    <div className="min-h-screen flex bg-gray-900 text-white">
-      {/* Columna izquierda */}
-      <nav className="w-64 ml-8 bg-black/70 flex flex-col p-4 space-y-4 backdrop-blur-md">
+    <div className="min-h-screen flex flex-col md:flex-row bg-gray-900 text-white">
+      {/* Botón de menú solo visible en móviles */}
+      <button
+        className="md:hidden bg-black/70 text-white p-3 fixed top-4 left-4 z-50 rounded-xl"
+        onClick={() => setMenuOpen(!menuOpen)}
+      >
+        {menuOpen ? "✖" : "☰"}
+      </button>
+
+      {/* Columna izquierda (nav) */}
+      <nav
+        className={`fixed md:static top-0 left-0 h-full md:h-auto bg-black/70 flex flex-col p-4 space-y-4 backdrop-blur-md transform transition-transform duration-300 z-40
+        ${menuOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"} w-64`}
+      >
         {navItems.map((item) => (
           <button
             key={item.id}
-            onClick={() => setSelectedUniverse(item.id)}
+            onClick={() => {
+              setSelectedUniverse(item.id);
+              setMenuOpen(false);
+            }}
             className="relative group rounded-xl overflow-hidden shadow-lg transform transition hover:scale-105"
           >
-            {/* Imagen de fondo */}
             <img
               src={item.image}
               alt={item.label}
               className="w-full h-32 object-cover transition duration-300 group-hover:brightness-75"
             />
-
-            {/* Capa oscura con texto */}
-            <div
-              className={`absolute inset-0 bg-gradient-to-t ${item.color} via-transparent to-transparent flex items-center justify-center`}
-            >
-              <span className="text-xl font-bold text-white drop-shadow-lg">
-                {item.label}
-              </span>
+            <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent flex items-center justify-center">
+              <span className="text-xl font-bold text-white drop-shadow-lg">{item.label}</span>
             </div>
           </button>
         ))}
       </nav>
 
-      {/* Área principal con márgenes globales laterales */}
+      {/* Área principal */}
       <main
-        className="flex-1 overflow-auto bg-cover bg-center px-6 md:px-12 lg:px-24 py-6"
+        className="flex-1 p-6 md:ml-0 overflow-auto bg-cover bg-center"
         style={{ backgroundImage: "url('/background.jpg')" }}
       >
         {!selectedUniverse && <Home />}
@@ -61,19 +68,12 @@ const App = () => {
         {selectedUniverse === "Favorites" && <Favorites />}
       </main>
 
-      {/* ToastContainer global */}
-      <ToastContainer
-        position="top-right"
-        autoClose={3000}
-        hideProgressBar={false}
-        newestOnTop={true}
-        closeOnClick
-        pauseOnHover
-      />
+      <ToastContainer position="top-right" autoClose={3000} />
     </div>
   );
 };
 
 export default App;
+
 
 

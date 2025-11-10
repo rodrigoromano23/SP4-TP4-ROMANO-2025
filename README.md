@@ -97,7 +97,7 @@ npm run dev
 ### 🌎 Despliegue
 
 El proyecto fue desplegado en **Netlify** (o Vercel).
-👉 [Enlace de la app desplegada](https://tu-enlace-aqui.netlify.app)
+👉 [Enlace de la app desplegada](https://multiperson.netlify.app)
 
 ---
 
